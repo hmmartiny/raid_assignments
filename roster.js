@@ -7,7 +7,7 @@ function ImportAQ40Roster() {
   sheet.getRange("A7:H11").setBackground(null); // This clears the background color
 
   sheet.getRange("A15:I40").clearContent();
-  sheet.getRange("A15:I40").setBackground(null);
+  sheet.getRange("A15:J40").setBackground(null);
 
 
   // Get the value from cell E1

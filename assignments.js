@@ -1,8 +1,6 @@
 function AssignAQ40(){
-    // Define the source range in Roster!A14:I28
-    // Columns are classes
-    var sourceRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster').getRange('A15:J35');
-
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster');
+    
     var tankRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B4:B7');
     var warriorRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B8:B22');
     var rogueRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B24:B33');
@@ -21,29 +19,41 @@ function AssignAQ40(){
     hunterRange.clearContent();
     warlockRange.clearContent();
     mageRange.clearContent();
-    tankRange.clearContent();
     paladinRange.clearContent();
     druidRange.clearContent();
     boomkinRange.clearContent();
 
-    var tanks = []; // column A
-    var warriors = []; // column B
-    var rogues = []; // column C
-    var hunters = []; // column D
-    var warlocks = []; // column E
-    var mages = []; // column F
-    var priests = []; // column G
-    var paladins = []; // column H
-    var druids = []; // column I
-    var boomkins = []; // column J
+    var tanks = [];
+    var warriors = [];
+    var rogues = [];
+    var hunters = [];
+    var warlocks = [];
+    var mages = [];
+    var priests = [];
+    var paladins = [];
+    var druids = [];
+    var boomkins = [];
 
-    // Get all values from the source range at once
+    // Get tanks from Group 1 (A7:A9) for AQ40 roster
+    var group1Tanks = sheet.getRange('A7:A9').getValues();
+    for (var i = 0; i < group1Tanks.length; i++) {
+        if (group1Tanks[i][0] !== '') tanks.push(group1Tanks[i][0]);
+    }
+    
+    // Get 4th tank from Group 2 first warrior (B7)
+    var group2FirstWarrior = sheet.getRange('B7').getValue();
+    if (group2FirstWarrior !== '') {
+        tanks.push(group2FirstWarrior);
+    }
+
+    // Get the rest of the roster data from the class columns
+    var sourceRange = sheet.getRange('A15:J35');
     var values = sourceRange.getValues();
 
     // Loop through each row in the source range
     for (var i = 0; i < values.length; i++) {
         // Add the value in each column to the corresponding list if it's not empty
-        if (values[i][0] !== '') tanks.push(values[i][0]); // Column A
+        // Skip column A (tanks) since we handled that from groups
         if (values[i][1] !== '') warriors.push(values[i][1]); // Column B
         if (values[i][2] !== '') rogues.push(values[i][2]); // Column C
         if (values[i][3] !== '') hunters.push(values[i][3]); // Column D
@@ -53,13 +63,6 @@ function AssignAQ40(){
         if (values[i][7] !== '') paladins.push(values[i][7]); // Column H
         if (values[i][8] !== '') druids.push(values[i][8]); // Column I
         if (values[i][9] !== '') boomkins.push(values[i][9]); // Column J
-    }
-
-    // Check if tanks has less than four elements
-    while (tanks.length < 4 && warriors.length > 0) {
-        // Move an element from warriors to tanks
-        var warrior = warriors.shift();
-        tanks.push(warrior);
     }
 
     // Function to convert a 1D array to a 2D array and fill with empty values if needed
@@ -85,22 +88,8 @@ function AssignAQ40(){
     druidRange.setValues(prepareDataForRange(druids, druidRange));
     boomkinRange.setValues(prepareDataForRange(boomkins, boomkinRange));
 
-    // Update post-twin trash healing marks - since function doesn't automatically update itself.
-    // var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40');
-    // Priests
-    // sheet.getRange('H58').setFormula('=postTwinMarks("square")');
-    // sheet.getRange('H59').setFormula('=postTwinMarks("cross")');
-    // sheet.getRange('H60').setFormula('=postTwinMarks("square")');
-    // sheet.getRange('H61').setFormula('=postTwinMarks("moon")');
-    // sheet.getRange('H62').setFormula('=postTwinMarks("triangle")');
-
-    // // Paladins
-    // sheet.getRange('H66').setFormula('=postTwinMarks("skull")');
-    // sheet.getRange('H67').setFormula('=postTwinMarks("cross")');
-    // sheet.getRange('H68').setFormula('=postTwinMarks("square")');
-    // sheet.getRange('H69').setFormula('=postTwinMarks("moon")');
-    // sheet.getRange('H70').setFormula('=postTwinMarks("triangle")');
-
+    // Hide Naxx sheets if H3=TRUE
+    ManageSheetVisibility('H3', 'AQ40');
 }
 
 var tankRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B5:B8');
@@ -115,10 +104,8 @@ var paladinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').
 var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B71:B73');
 
 function AssignNaxx(){
-    // Define the source range in Roster!A14:I28
-    // Columns are classes
-    var sourceRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster').getRange('M15:U35');
-
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster');
+    
     // Clear data in the ranges
     tankRange.clearContent();
     warriorRange.clearContent();
@@ -126,28 +113,39 @@ function AssignNaxx(){
     hunterRange.clearContent();
     warlockRange.clearContent();
     mageRange.clearContent();
-    tankRange.clearContent();
     paladinRange.clearContent();
     druidRange.clearContent();
 
-    var tanks = []; // column A
-    var warriors = []; // column B
-    var rogues = []; // column C
-    var hunters = []; // column D
-    var warlocks = []; // column E
-    var mages = []; // column F
-    var priests = []; // column G
-    var paladins = []; // column H
-    var druids = []; // column I
+    var tanks = [];
+    var warriors = [];
+    var rogues = [];
+    var hunters = [];
+    var warlocks = [];
+    var mages = [];
+    var priests = [];
+    var paladins = [];
+    var druids = [];
 
-    // Get all values from the source range at once
+    // Get tanks from Group 1 (M7:M9) for Naxx roster
+    var group1Tanks = sheet.getRange('M7:M9').getValues();
+    for (var i = 0; i < group1Tanks.length; i++) {
+        if (group1Tanks[i][0] !== '') tanks.push(group1Tanks[i][0]);
+    }
+    
+    // Get 4th tank from Group 2 first warrior (N7)
+    var group2FirstWarrior = sheet.getRange('N7').getValue();
+    if (group2FirstWarrior !== '') {
+        tanks.push(group2FirstWarrior);
+    }
+    
+    // Now get the rest of the warriors starting from B8 onwards
+    // and collect all other classes from the appropriate roster range
+    var sourceRange = sheet.getRange('M15:U35');
     var values = sourceRange.getValues();
 
-    // Loop through each row in the source range
     for (var i = 0; i < values.length; i++) {
-        // Add the value in each column to the corresponding list if it's not empty
-        if (values[i][0] !== '') tanks.push(values[i][0]); // Column A
-        if (values[i][1] !== '') warriors.push(values[i][1]); // Column B
+        // Skip the first tank column since we handled that separately
+        if (values[i][1] !== '') warriors.push(values[i][1]); // Column B (warriors/fury)
         if (values[i][2] !== '') rogues.push(values[i][2]); // Column C
         if (values[i][3] !== '') hunters.push(values[i][3]); // Column D
         if (values[i][4] !== '') warlocks.push(values[i][4]); // Column E
@@ -155,13 +153,6 @@ function AssignNaxx(){
         if (values[i][6] !== '') priests.push(values[i][6]); // Column G
         if (values[i][7] !== '') paladins.push(values[i][7]); // Column H
         if (values[i][8] !== '') druids.push(values[i][8]); // Column I
-    }
-
-    // Check if tanks has less than four elements
-    while (tanks.length < 3 && warriors.length > 0) {
-        // Move an element from warriors to tanks
-        var warrior = warriors.shift();
-        tanks.push(warrior);
     }
 
     tankRange.setValues(prepareDataForRange(tanks, tankRange));
@@ -178,4 +169,60 @@ function AssignNaxx(){
     GetSporeNames();
     Get4HMHealerNames();
     GetKTNames();
+
+    // Hide AQ40 sheets if T3=TRUE
+    ManageSheetVisibility('T3', 'Naxx');
+}
+
+function ManageSheetVisibility(checkCell, raidType) {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var rosterSheet = ss.getSheetByName('Roster');
+    var hideSheets = rosterSheet.getRange(checkCell).getValue();
+    
+    var aq40Sheets = ['AQ40'];
+    var naxxSheets = ['Naxx', 'LIP/AOE taunts', 'SporeGrps', '4HM', 'Saph+KT'];
+    
+    if (hideSheets === true) {
+        
+        if (raidType === 'AQ40') {
+            // Hide Naxx sheets, show AQ40 sheets
+            naxxSheets.forEach(function(sheetName) {
+                var sheetToHide = ss.getSheetByName(sheetName);
+                if (sheetToHide) {
+                    sheetToHide.hideSheet();
+                }
+            });
+            
+            aq40Sheets.forEach(function(sheetName) {
+                var sheetToShow = ss.getSheetByName(sheetName);
+                if (sheetToShow && sheetToShow.isSheetHidden()) {
+                    sheetToShow.showSheet();
+                }
+            });
+        } else if (raidType === 'Naxx') {
+            // Hide AQ40 sheets, show Naxx sheets
+            aq40Sheets.forEach(function(sheetName) {
+                var sheetToHide = ss.getSheetByName(sheetName);
+                if (sheetToHide) {
+                    sheetToHide.hideSheet();
+                }
+            });
+            
+            naxxSheets.forEach(function(sheetName) {
+                var sheetToShow = ss.getSheetByName(sheetName);
+                if (sheetToShow && sheetToShow.isSheetHidden()) {
+                    sheetToShow.showSheet();
+                }
+            });
+        }
+    } else {
+        // Show all sheets if the checkbox is FALSE
+        var allSheets = aq40Sheets.concat(naxxSheets);
+        allSheets.forEach(function(sheetName) {
+            var sheetToShow = ss.getSheetByName(sheetName);
+            if (sheetToShow && sheetToShow.isSheetHidden()) {
+                sheetToShow.showSheet();
+            }
+        });
+    }
 }

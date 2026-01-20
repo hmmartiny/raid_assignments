@@ -59,3 +59,14 @@ var specToClass = {
   'Retribution': 'Paladin',
   'Balance': 'Boomkin'
 }
+
+function ShowAllSheets() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var allSheets = ss.getSheets();
+    
+    allSheets.forEach(function(sheet) {
+        if (sheet.isSheetHidden()) {
+            sheet.showSheet();
+        }
+    });
+}
