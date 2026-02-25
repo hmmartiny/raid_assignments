@@ -1,12 +1,37 @@
 
+/**
+ * Imports and organizes an AQ40 raid roster from an external API.
+ * 
+ * This function fetches raid roster data from the raid-helper.dev API using a raid plan ID
+ * stored in cell G5. It parses the response and extracts player information (name, class, spec, 
+ * party ID, and slot ID). The function then:
+ * 
+ * 1. Clears existing roster data from the sheet
+ * 2. Filters valid players (those in parties 1-8 with required properties)
+ * 3. Maps player specs to classes using the specToClass lookup table
+ * 4. Populates a 5x8 table (rows 7-11, columns A-H) with player names positioned by party and slot
+ * 5. Colors cells based on class using the colorMapping lookup table
+ * 6. Creates a class summary list (starting row 14) with players grouped by class
+ * 7. Copies the organized roster to BWL and MC raid sections for easy viewing
+ * 
+ * @requires specToClass - A mapping object that converts spec names to class names
+ * @requires colorMapping - A mapping object that associates class names with hex color codes
+ * @requires SpreadsheetApp - Google Apps Script Spreadsheet service
+ * @requires UrlFetchApp - Google Apps Script URL fetch service
+ * @requires Logger - Google Apps Script Logger service
+ * 
+ * @returns {void}
+ */
 function ImportAQ40Roster() {
+
+  Logger.log("Started AQ40 roster import")
   
   // clear data
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   sheet.getRange("A7:H11").clearContent();
   sheet.getRange("A7:H11").setBackground(null); // This clears the background color
 
-  sheet.getRange("A15:I40").clearContent();
+  sheet.getRange("A15:J40").clearContent();
   sheet.getRange("A15:J40").setBackground(null);
 
 
@@ -16,29 +41,57 @@ function ImportAQ40Roster() {
   // Build the URL
   var url = 'https://raid-helper.dev/api/raidplan/' + cellValue;
   
+  Logger.log("Fetching data from URL: " + url);
+
   var response = UrlFetchApp.fetch(url);
   var data = JSON.parse(response.getContentText());
+
+  Logger.log("Data fetched: " + JSON.stringify(data).substring(0, 100) + "...");
   
   // Initialize an empty array to store the extracted data
   var extractedData = [];
   
-  // Check if the data has 'raidDrop' property
-  if(data.hasOwnProperty('raidDrop')) {
-    // Loop through each item in 'raidDrop'
-    for(var i = 0; i < data.raidDrop.length; i++) {
-      var item = data.raidDrop[i];
+  // Check if the data has 'slots' property (new API response)
+  if(data.hasOwnProperty('slots')) {
+    // Loop through each item in 'slots'
+    for(var i = 0; i < data.slots.length; i++) {
+      var item = data.slots[i];
+      Logger.log("i:" + i);
+
+      Logger.log("Processing item: " + JSON.stringify(item));
       
-      // Check if the item has 'name', 'class', and 'spec' properties, and partyId is between 1 and 8
-      if(item.hasOwnProperty('name') && item.hasOwnProperty('class') && item.hasOwnProperty('spec') && item.hasOwnProperty('partyId') && item.partyId >= 1 && item.partyId <= 8) {
-        
-        // Replace 'item.class' with the value from 'specToClass'
-        var classValue = specToClass[item.spec] || item.class;
-        
+      // Check if the item has 'name', 'className', and 'specName' properties
+      if(item.hasOwnProperty('name') && item.hasOwnProperty('className') && item.hasOwnProperty('specName')) {
+        Logger.log("Valid item found: " + JSON.stringify(item));
+        // Replace 'item.className' with the value from 'specToClass'
+        var classValue = specToClass[item.specName] || item.className;
+
+        // Prefer explicit partyId/slotId if present, otherwise derive from slotNumber (1-40)
+        var partyId = item.hasOwnProperty('partyId') ? parseInt(item.partyId, 10) : null;
+        var slotId = item.hasOwnProperty('slotId') ? parseInt(item.slotId, 10) : null;
+        if(!partyId && item.hasOwnProperty('groupNumber')) {
+          partyId = parseInt(item.groupNumber, 10);
+        }
+        if(!slotId && item.hasOwnProperty('slotNumber')) {
+          slotId = parseInt(item.slotNumber, 10);
+        }
+        if(!partyId || !slotId) {
+          var slotNumber = item.hasOwnProperty('slotNumber') ? parseInt(item.slotNumber, 10) : null;
+          if(slotNumber) {
+            partyId = Math.floor((slotNumber - 1) / 5) + 1;
+            slotId = ((slotNumber - 1) % 5) + 1;
+          }
+        }
+
         // Push the extracted data to the array
-        extractedData.push([item.name, classValue, item.spec, item.partyId, item.slotId]);
+        if(partyId && slotId) {
+          extractedData.push([item.name, classValue, item.specName, partyId, slotId]);
+        }
       }
     }
   }
+
+  Logger.log("Extracted data length: " + extractedData.length);
   
   // Get the active sheet
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -131,20 +184,37 @@ function ImportNaxxRoster() {
   // Initialize an empty array to store the extracted data
   var extractedData = [];
   
-  // Check if the data has 'raidDrop' property
-  if(data.hasOwnProperty('raidDrop')) {
-    // Loop through each item in 'raidDrop'
-    for(var i = 0; i < data.raidDrop.length; i++) {
-      var item = data.raidDrop[i];
+  // Check if the data has 'slots' property (new API response)
+  if(data.hasOwnProperty('slots')) {
+    // Loop through each item in 'slots'
+    for(var i = 0; i < data.slots.length; i++) {
+      var item = data.slots[i];
       
-      // Check if the item has 'name', 'class', and 'spec' properties, and partyId is between 1 and 8
-      if(item.hasOwnProperty('name') && item.hasOwnProperty('class') && item.hasOwnProperty('spec') && item.hasOwnProperty('partyId') && item.partyId >= 1 && item.partyId <= 8) {
-        // Push the extracted data to the array
+      // Check if the item has 'name', 'className', and 'specName' properties
+      if(item.hasOwnProperty('name') && item.hasOwnProperty('className') && item.hasOwnProperty('specName')) {
+        // Replace 'item.className' with the value from 'specToClass'
+        var classValue = specToClass[item.specName] || item.className;
 
-        // Replace 'item.class' with the value from 'specToClass'
-        var classValue = specToClass[item.spec] || item.class;
+        // Prefer explicit partyId/slotId if present, otherwise derive from slotNumber (1-40)
+        var partyId = item.hasOwnProperty('partyId') ? parseInt(item.partyId, 10) : null;
+        var slotId = item.hasOwnProperty('slotId') ? parseInt(item.slotId, 10) : null;
+        if(!partyId && item.hasOwnProperty('groupNumber')) {
+          partyId = parseInt(item.groupNumber, 10);
+        }
+        if(!slotId && item.hasOwnProperty('slotNumber')) {
+          slotId = parseInt(item.slotNumber, 10);
+        }
+        if(!partyId || !slotId) {
+          var slotNumber = item.hasOwnProperty('slotNumber') ? parseInt(item.slotNumber, 10) : null;
+          if(slotNumber) {
+            partyId = Math.floor((slotNumber - 1) / 5) + 1;
+            slotId = ((slotNumber - 1) % 5) + 1;
+          }
+        }
 
-        extractedData.push([item.name, classValue, item.spec, item.partyId, item.slotId]);
+        if(partyId && slotId) {
+          extractedData.push([item.name, classValue, item.specName, partyId, slotId]);
+        }
       }
     }
   }
