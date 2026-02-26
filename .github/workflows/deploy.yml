@@ -1,4 +1,4 @@
-name: Deploy Google Apps Script
+name: Deploy Google Apps Script (DEV/PROD)
 
 on:
   push:
@@ -21,6 +21,21 @@ jobs:
           run: echo "$CLASPRC_JSON" > ~/.clasprc.json
           env:
             CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        - name: Select scriptId
+          run: |
+            if [ "$GITHUB_REF_NAME" == "main" ]; then
+              echo '{ "scriptID": "'"${SCRIPT_ID_PROD}"'" }' > ~/.clasp.json
+              echo "Deploying to PRODUCTION sheet"
+            else
+              echo '{ "scriptID": "'"${SCRIPT_ID_DEV}"'" }' > ~/.clasp.json
+              echo "Deploying to DEV sheet"
+            fi
+          env:
+            SCRIPT_ID_PROD: ${{ secrets.SCRIPT_ID_PROD }} 
+            SCRIPT_ID_DEV: ${{ secrets.SCRIPT_ID_DEV }}
         
         - name: Deploy to Google Apps Script
           run: clasp push
+        
+        - name: Create new version
+          run: clasp version "Deploy $GITHUB_REF_NAME $GITHUB_SHA"
