@@ -2,11 +2,12 @@ name: Deploy Google Apps Script (DEV/PROD)
 
 on:
   push:
-    branches: [main]
+    branches: [develop, main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     steps:
         - uses: actions/checkout@v4
 
