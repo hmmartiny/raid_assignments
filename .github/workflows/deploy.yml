@@ -25,10 +25,10 @@ jobs:
         - name: Select scriptId
           run: |
             if [ "$GITHUB_REF_NAME" == "main" ]; then
-              echo '{ "scriptID": "'"${SCRIPT_ID_PROD}"'" }' > ~/.clasp.json
+              echo '{ "scriptId": "'"${SCRIPT_ID_PROD}"'" }' > .clasp.json
               echo "Deploying to PRODUCTION sheet"
             else
-              echo '{ "scriptID": "'"${SCRIPT_ID_DEV}"'" }' > ~/.clasp.json
+              echo '{ "scriptId": "'"${SCRIPT_ID_DEV}"'" }' > .clasp.json
               echo "Deploying to DEV sheet"
             fi
           env:
