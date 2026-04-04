@@ -258,7 +258,7 @@ function ImportNaxxRoster() {
   }
 
   var startColumn = 13;
-  var furyGroupOrder = [4, 5, 3, 6, 7];
+  var furyGroupOrder = [2, 4, 5, 3, 6, 7];
   var furyGroupPriority = {};
   for (var g = 0; g < furyGroupOrder.length; g++) {
     furyGroupPriority[furyGroupOrder[g]] = g;
@@ -268,7 +268,6 @@ function ImportNaxxRoster() {
     var classColor = colorMapping[key];
     var tankItems = extractedData.filter(function(item) { return item[1] === key; });
 
-    // Custom ordering for Fury warriors in N15+
     if (key === 'Warrior') {
       tankItems.sort(function(a, b) {
         var aGroup = a[3];
@@ -279,20 +278,20 @@ function ImportNaxxRoster() {
 
         if (aPriority !== bPriority) return aPriority - bPriority;
 
-        // Within the same group, follow row order in N7:T11 (slot 1 to 5)
+        // If both are outside priority list, keep deterministic group order
+        if (aGroup !== bGroup) return aGroup - bGroup;
+
+        // Within same group: slot 1..5
         return a[4] - b[4];
       });
-
-      // Optional: if you want ONLY groups 4,5,3,6,7, uncomment below:
-      // tankItems = tankItems.filter(function(item) { return furyGroupPriority.hasOwnProperty(item[3]); });
     }
 
     if (tankItems.length > 0) {
       var tankItemsArray = tankItems.map(function(item) { return [item[0]]; });
 
-      sheet.getRange(14, startColumn + index).setValue(key);  
+      sheet.getRange(14, startColumn + index).setValue(key);
       sheet.getRange(14, startColumn + index).setFontWeight('bold');
-      sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setValues(tankItemsArray);  
+      sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setValues(tankItemsArray);
       sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setBackground(classColor);
     }
   });
