@@ -105,6 +105,7 @@ var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').ge
 
 function AssignNaxx(){
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster');
+    var naxxSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx');
     
     // Clear data in the ranges
     tankRange.clearContent();
@@ -115,6 +116,32 @@ function AssignNaxx(){
     mageRange.clearContent();
     paladinRange.clearContent();
     druidRange.clearContent();
+
+    // Reset assignment labels on the Naxx sheet
+    naxxSheet.getRange('C25:C34').clearContent();
+    naxxSheet.getRange('C25').setValue('IEA');
+
+    naxxSheet.getRange('I36:I39').clearContent();
+    naxxSheet.getRange('I36').setValue('Pull');
+
+    naxxSheet.getRange('K56:M62').clearContent();
+    naxxSheet.getRange('K56').setValue('MC');
+    naxxSheet.getRange('K57').setValue('MC backup');
+
+    naxxSheet.getRange('O56:O62').clearContent();
+    naxxSheet.getRange('O56').setValue('1. MC');
+    naxxSheet.getRange('O57').setValue('2. MC');
+    naxxSheet.getRange('O58').setValue('MC backup');
+
+    naxxSheet.getRange('T56:T62').clearContent();
+    naxxSheet.getRange('T56').setValue('1. FW');
+    naxxSheet.getRange('T57').setValue('2. FW');
+
+    naxxSheet.getRange('AA56:AA62').clearContent();
+    naxxSheet.getRange('AA56').setValue('Shackle 1');
+    naxxSheet.getRange('AA57').setValue('Shackle 2');
+    naxxSheet.getRange('AA58').setValue('Shackle 3');
+    naxxSheet.getRange('AA59').setValue('Shackle backup');
 
     var tanks = [];
     var warriors = [];
