@@ -1,4 +1,3 @@
-
 /**
  * Imports and organizes an AQ40 raid roster from an external API.
  * 
@@ -259,21 +258,40 @@ function ImportNaxxRoster() {
   }
 
   var startColumn = 13;
+  var furyGroupOrder = [2, 4, 5, 3, 6, 7];
+  var furyGroupPriority = {};
+  for (var g = 0; g < furyGroupOrder.length; g++) {
+    furyGroupPriority[furyGroupOrder[g]] = g;
+  }
+
   Object.keys(colorMapping).forEach(function(key, index) { 
     var classColor = colorMapping[key];
-    var tankItems = extractedData.filter(item => item[1] === key);
+    var tankItems = extractedData.filter(function(item) { return item[1] === key; });
 
-    if(tankItems.length > 0){
-      // Create a 2D array where each sub-array contains one item name
-      var tankItemsArray = tankItems.map(item => [item[0]]);
+    if (key === 'Warrior') {
+      tankItems.sort(function(a, b) {
+        var aGroup = a[3];
+        var bGroup = b[3];
 
-      // Write key 
-      sheet.getRange(14, startColumn + index).setValue(key);  
+        var aPriority = furyGroupPriority.hasOwnProperty(aGroup) ? furyGroupPriority[aGroup] : 999;
+        var bPriority = furyGroupPriority.hasOwnProperty(bGroup) ? furyGroupPriority[bGroup] : 999;
+
+        if (aPriority !== bPriority) return aPriority - bPriority;
+
+        // If both are outside priority list, keep deterministic group order
+        if (aGroup !== bGroup) return aGroup - bGroup;
+
+        // Within same group: slot 1..5
+        return a[4] - b[4];
+      });
+    }
+
+    if (tankItems.length > 0) {
+      var tankItemsArray = tankItems.map(function(item) { return [item[0]]; });
+
+      sheet.getRange(14, startColumn + index).setValue(key);
       sheet.getRange(14, startColumn + index).setFontWeight('bold');
-      // Write the tank items to column A15 starting from row 15
-      sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setValues(tankItemsArray);  
-
-      // Color background
+      sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setValues(tankItemsArray);
       sheet.getRange(15, startColumn + index, tankItemsArray.length, tankItemsArray[0].length).setBackground(classColor);
     }
   });
