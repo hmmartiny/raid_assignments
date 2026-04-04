@@ -34,4 +34,9 @@ function GetSporeNames(){
   rangeRogue.setValues(prepareDataForRange(rogues, rangeRogue));
   rangeHunter.setValues(prepareDataForRange(hunters, rangeHunter));
   rangeWarlock.setValues(prepareDataForRange(warlocks, rangeWarlock));
+
+  // Preserve existing layout but force plain (non-bold) player names.
+  sheetSpore
+    .getRangeList(['B16:B36', 'C16:C36', 'D16:D36', 'E16:E36', 'F16:F36'])
+    .setFontWeight('normal');
 }
