@@ -122,7 +122,7 @@ function AssignNaxx(){
     naxxSheet.getRange('C25').setValue('IEA');
 
     naxxSheet.getRange('I36:I39').clearContent();
-    naxxSheet.getRange('I36').setValue('Pull');
+    naxxSheet.getRange('I36').setValue('Pull & Mark');
 
     naxxSheet.getRange('K56:M62').clearContent();
     naxxSheet.getRange('K56').setValue('MC');
