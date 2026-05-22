@@ -94,8 +94,27 @@ function ImportAQ40Roster() {
 
   var shamans = extractedData.filter(function(item) { return item[1] === 'Shaman'; });
   if (shamans.length > 0) {
-    var shamanNames = shamans.map(function(item) { return item[0]; }).join(', ');
-    SpreadsheetApp.getUi().alert('Warning: Shamans in roster', 'The following players have class Shaman and should be corrected:\n\n' + shamanNames, SpreadsheetApp.getUi().ButtonSet.OK);
+    var ui = SpreadsheetApp.getUi();
+    var validClasses = Object.keys(colorMapping).filter(function(c) { return c !== '' && c !== 'Tank'; });
+    var validClassList = validClasses.join(', ');
+    for (var s = 0; s < shamans.length; s++) {
+      var shaman = shamans[s];
+      var response = ui.prompt(
+        'Fix Shaman Class (' + (s + 1) + ' of ' + shamans.length + ')',
+        'Player: ' + shaman[0] + '\nEnter correct class:\n' + validClassList,
+        ui.ButtonSet.OK_CANCEL
+      );
+      if (response.getSelectedButton() === ui.Button.OK) {
+        var newClass = response.getResponseText().trim();
+        if (colorMapping.hasOwnProperty(newClass) && newClass !== '' && newClass !== 'Tank') {
+          for (var j = 0; j < extractedData.length; j++) {
+            if (extractedData[j][0] === shaman[0]) {
+              extractedData[j][1] = newClass;
+            }
+          }
+        }
+      }
+    }
   }
 
   // Get the active sheet
@@ -226,8 +245,27 @@ function ImportNaxxRoster() {
 
   var shamans = extractedData.filter(function(item) { return item[1] === 'Shaman'; });
   if (shamans.length > 0) {
-    var shamanNames = shamans.map(function(item) { return item[0]; }).join(', ');
-    SpreadsheetApp.getUi().alert('Warning: Shamans in roster', 'The following players have class Shaman and should be corrected:\n\n' + shamanNames, SpreadsheetApp.getUi().ButtonSet.OK);
+    var ui = SpreadsheetApp.getUi();
+    var validClasses = Object.keys(colorMapping).filter(function(c) { return c !== '' && c !== 'Tank'; });
+    var validClassList = validClasses.join(', ');
+    for (var s = 0; s < shamans.length; s++) {
+      var shaman = shamans[s];
+      var response = ui.prompt(
+        'Fix Shaman Class (' + (s + 1) + ' of ' + shamans.length + ')',
+        'Player: ' + shaman[0] + '\nEnter correct class:\n' + validClassList,
+        ui.ButtonSet.OK_CANCEL
+      );
+      if (response.getSelectedButton() === ui.Button.OK) {
+        var newClass = response.getResponseText().trim();
+        if (colorMapping.hasOwnProperty(newClass) && newClass !== '' && newClass !== 'Tank') {
+          for (var j = 0; j < extractedData.length; j++) {
+            if (extractedData[j][0] === shaman[0]) {
+              extractedData[j][1] = newClass;
+            }
+          }
+        }
+      }
+    }
   }
 
   // Get the active sheet
