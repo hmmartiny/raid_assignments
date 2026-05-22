@@ -271,7 +271,16 @@ function ImportNaxxRoster() {
     }
   }
 
-  var furyGroupOrder = [2, 4, 5, 6, 7, 3];
+  // Build fury group order dynamically based on which groups contain a hunter.
+  // Hunter groups go to the end (descending), non-hunter groups come first (2 always first, rest ascending).
+  var furyGroupNums = [2, 3, 4, 5, 6, 7];
+  var hunterGroups = furyGroupNums.filter(function(g) {
+    return extractedData.some(function(item) { return item[1] === 'Hunter' && item[3] === g; });
+  });
+  var nonHunterGroups = furyGroupNums.filter(function(g) { return hunterGroups.indexOf(g) === -1; });
+  hunterGroups.sort(function(a, b) { return b - a; });
+  var furyGroupOrder = nonHunterGroups.concat(hunterGroups);
+
   var furyGroupPriority = {};
   for (var g = 0; g < furyGroupOrder.length; g++) {
     furyGroupPriority[furyGroupOrder[g]] = g;
