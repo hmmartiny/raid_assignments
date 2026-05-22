@@ -193,8 +193,8 @@ function ImportNaxxRoster() {
   sheet.getRange("M7:T11").clearContent();
   sheet.getRange("M7:T11").setBackground(null); // This clears the background color
 
-  sheet.getRange("M15:T40").clearContent();
-  sheet.getRange("M15:T40").setBackground(null);
+  sheet.getRange("M15:V40").clearContent();
+  sheet.getRange("M15:V40").setBackground(null);
 
   // Get the value from cell E1
   var cellValue = SpreadsheetApp.getActiveSpreadsheet().getRange('S5').getValue();
