@@ -91,7 +91,13 @@ function ImportAQ40Roster() {
   }
 
   Logger.log("Extracted data length: " + extractedData.length);
-  
+
+  var shamans = extractedData.filter(function(item) { return item[1] === 'Shaman'; });
+  if (shamans.length > 0) {
+    var shamanNames = shamans.map(function(item) { return item[0]; }).join(', ');
+    SpreadsheetApp.getUi().alert('Warning: Shamans in roster', 'The following players have class Shaman and should be corrected:\n\n' + shamanNames, SpreadsheetApp.getUi().ButtonSet.OK);
+  }
+
   // Get the active sheet
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   
@@ -217,7 +223,13 @@ function ImportNaxxRoster() {
       }
     }
   }
-  
+
+  var shamans = extractedData.filter(function(item) { return item[1] === 'Shaman'; });
+  if (shamans.length > 0) {
+    var shamanNames = shamans.map(function(item) { return item[0]; }).join(', ');
+    SpreadsheetApp.getUi().alert('Warning: Shamans in roster', 'The following players have class Shaman and should be corrected:\n\n' + shamanNames, SpreadsheetApp.getUi().ButtonSet.OK);
+  }
+
   // Get the active sheet
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   
