@@ -258,13 +258,26 @@ function ImportNaxxRoster() {
   }
 
   var startColumn = 13;
+
+  // Reclassify tanks: all warriors in group 1, plus the first warrior (lowest slot) in group 2
+  var warriorsInGroup2 = extractedData
+    .filter(function(item) { return item[1] === 'Warrior' && item[3] === 2; })
+    .sort(function(a, b) { return a[4] - b[4]; });
+  var firstGroup2TankName = warriorsInGroup2.length > 0 ? warriorsInGroup2[0][0] : null;
+  for (var i = 0; i < extractedData.length; i++) {
+    var w = extractedData[i];
+    if (w[1] === 'Warrior' && (w[3] === 1 || (w[3] === 2 && w[0] === firstGroup2TankName))) {
+      extractedData[i][1] = 'Tank';
+    }
+  }
+
   var furyGroupOrder = [2, 4, 5, 6, 7, 3];
   var furyGroupPriority = {};
   for (var g = 0; g < furyGroupOrder.length; g++) {
     furyGroupPriority[furyGroupOrder[g]] = g;
   }
 
-  Object.keys(colorMapping).forEach(function(key, index) { 
+  Object.keys(colorMapping).forEach(function(key, index) {
     var classColor = colorMapping[key];
     var tankItems = extractedData.filter(function(item) { return item[1] === key; });
 
