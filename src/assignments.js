@@ -54,7 +54,8 @@ function AssignAQ40(){
     for (var i = 0; i < values.length; i++) {
         // Add the value in each column to the corresponding list if it's not empty
         // Skip column A (tanks) since we handled that from groups
-        if (values[i][1] !== '') warriors.push(values[i][1]); // Column B
+        // Skip warriors already taken as tanks (e.g. the 4th tank from B7)
+        if (values[i][1] !== '' && tanks.indexOf(values[i][1]) === -1) warriors.push(values[i][1]); // Column B
         if (values[i][2] !== '') rogues.push(values[i][2]); // Column C
         if (values[i][3] !== '') hunters.push(values[i][3]); // Column D
         if (values[i][4] !== '') warlocks.push(values[i][4]); // Column E
@@ -172,7 +173,8 @@ function AssignNaxx(){
 
     for (var i = 0; i < values.length; i++) {
         // Skip the first tank column since we handled that separately
-        if (values[i][1] !== '') warriors.push(values[i][1]); // Column B (warriors/fury)
+        // Skip warriors already taken as tanks (e.g. the 4th tank from N7)
+        if (values[i][1] !== '' && tanks.indexOf(values[i][1]) === -1) warriors.push(values[i][1]); // Column B (warriors/fury)
         if (values[i][2] !== '') rogues.push(values[i][2]); // Column C
         if (values[i][3] !== '') hunters.push(values[i][3]); // Column D
         if (values[i][4] !== '') warlocks.push(values[i][4]); // Column E
