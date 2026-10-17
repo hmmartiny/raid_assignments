@@ -6,12 +6,12 @@ function priestKTPIpositions(){
 
   // Priest - PI pairs
   var cellPairs = [
-    ['W25', 'W13'], // Naxx!B56
-    ['W21', 'W5'],  // Naxx!B57
-    ['W27', 'W17'], // Naxx!B58
-    ['W26', 'W15'], // Naxx!B59
-    ['W22', 'W7'],  // Naxx!B60
-    ['W20', 'W19']  // Naxx!B61
+    ['W25', 'W13'], // Naxx!B58
+    ['W21', 'W5'],  // Naxx!B59
+    ['W27', 'W17'], // Naxx!B60
+    ['W26', 'W15'], // Naxx!B61
+    ['W22', 'W7'],  // Naxx!B62
+    ['W20', 'W19']  // Naxx!B63
   ];
 
   // 🔁 Clear all source and target cells first
@@ -21,17 +21,17 @@ function priestKTPIpositions(){
   });
 
   // Get the relevant Naxx data
-  var naxxColumnB = sheetNaxx.getRange('B56:B62').getValues();
-  var naxxColumnF = sheetNaxx.getRange('F56:F62').getValues();
+  var naxxColumnB = sheetNaxx.getRange('B58:B64').getValues();
+  var naxxColumnF = sheetNaxx.getRange('F58:F64').getValues();
 
   for (var i = 0; i < cellPairs.length; i++) {
     var sourceCell = cellPairs[i][0];
     var targetCell = cellPairs[i][1];
 
-    var sourceValue = naxxColumnB[i][0]; // B56 + i
+    var sourceValue = naxxColumnB[i][0]; // B58 + i
     sheetKT.getRange(sourceCell).setValue(sourceValue);
 
-    // Filter F56:F62 where B56:B62 == sourceValue
+    // Filter F58:F64 where B58:B64 == sourceValue
     var filtered = [];
     for (var j = 0; j < naxxColumnB.length; j++) {
       if (naxxColumnB[j][0] === sourceValue) {
@@ -238,7 +238,7 @@ function GetKTNames(){
   
   // Update names to put on KT positions
   var sheetKT = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Saph+KT');
-  var rangeKTMelee = sheetKT.getRange('AF5:AF32');
+  var rangeKTMelee = sheetKT.getRange('AF5:AF35');
   var rangeKTRanged = sheetKT.getRange('AG5:AG27');
   var rangeKTHealer = sheetKT.getRange('AH5:AH27');
 

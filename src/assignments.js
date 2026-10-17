@@ -2,15 +2,15 @@ function AssignAQ40(){
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster');
     
     var tankRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B4:B7');
-    var warriorRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B8:B22');
-    var rogueRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B24:B33');
-    var hunterRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B35:B38');
-    var warlockRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B40:B44');
-    var mageRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B46:B56');
-    var priestRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B58:B64');
-    var paladinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B66:B73');
-    var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B75:B77');
-    var boomkinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B78:B78');
+    var warriorRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B8:B25');
+    var rogueRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B27:B36');
+    var hunterRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B38:B41');
+    var warlockRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B43:B47');
+    var mageRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B49:B59');
+    var priestRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B61:B67');
+    var paladinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B69:B76');
+    var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B78:B80');
+    var boomkinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('AQ40').getRange('B81:B81');
 
     // Clear data in the ranges
     tankRange.clearContent();
@@ -93,15 +93,15 @@ function AssignAQ40(){
 }
 
 var tankRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B5:B8');
-var warriorRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B9:B23');
-var warriorDPSRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B11:B23');
-var rogueRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B25:B34');
-var hunterRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B36:B39');
-var warlockRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B41:B43');
-var mageRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B45:B54');
-var priestRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B56:B62');
-var paladinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B64:B69');
-var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B71:B73');
+var warriorRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B9:B25');
+var warriorDPSRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B11:B25');
+var rogueRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B27:B36');
+var hunterRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B38:B41');
+var warlockRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B43:B45');
+var mageRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B47:B56');
+var priestRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B58:B64');
+var paladinRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B66:B71');
+var druidRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Naxx').getRange('B73:B75');
 
 function AssignNaxx(){
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Roster');
@@ -118,30 +118,30 @@ function AssignNaxx(){
     druidRange.clearContent();
 
     // Reset assignment labels on the Naxx sheet
-    naxxSheet.getRange('C25:C34').clearContent();
-    naxxSheet.getRange('C25').setValue('IEA');
+    naxxSheet.getRange('C27:C36').clearContent(); // rogue
+    naxxSheet.getRange('C27').setValue('IEA');
 
-    naxxSheet.getRange('I36:I39').clearContent();
-    naxxSheet.getRange('I36').setValue('Pull & Mark');
+    naxxSheet.getRange('I38:I41').clearContent(); // hunter
+    naxxSheet.getRange('I38').setValue('Pull & Mark');
 
-    naxxSheet.getRange('K56:M62').clearContent();
-    naxxSheet.getRange('K56').setValue('MC');
-    naxxSheet.getRange('K57').setValue('MC backup');
+    naxxSheet.getRange('K58:M64').clearContent(); // priest faerlina MCs
+    naxxSheet.getRange('K58').setValue('MC');
+    naxxSheet.getRange('K59').setValue('MC backup');
 
-    naxxSheet.getRange('O56:O62').clearContent();
-    naxxSheet.getRange('O56').setValue('1. MC');
-    naxxSheet.getRange('O57').setValue('2. MC');
-    naxxSheet.getRange('O58').setValue('MC backup');
+    naxxSheet.getRange('O58:O64').clearContent(); // priest Razu MC
+    naxxSheet.getRange('O58').setValue('1. MC');
+    naxxSheet.getRange('O59').setValue('2. MC');
+    naxxSheet.getRange('O60').setValue('MC backup');
 
-    naxxSheet.getRange('T56:T62').clearContent();
-    naxxSheet.getRange('T56').setValue('1. FW');
-    naxxSheet.getRange('T57').setValue('2. FW');
+    naxxSheet.getRange('T58:T64').clearContent(); // priest FW
+    naxxSheet.getRange('T58').setValue('1. FW');
+    naxxSheet.getRange('T59').setValue('2. FW');
 
-    naxxSheet.getRange('AA56:AA62').clearContent();
-    naxxSheet.getRange('AA56').setValue('Shackle 1');
-    naxxSheet.getRange('AA57').setValue('Shackle 2');
-    naxxSheet.getRange('AA58').setValue('Shackle 3');
-    naxxSheet.getRange('AA59').setValue('Shackle backup');
+    naxxSheet.getRange('AA58:AA64').clearContent(); // priest shackles on KT
+    naxxSheet.getRange('AA58').setValue('Shackle 1');
+    naxxSheet.getRange('AA59').setValue('Shackle 2');
+    naxxSheet.getRange('AA60').setValue('Shackle 3');
+    naxxSheet.getRange('AA61').setValue('Shackle backup');
 
     var tanks = [];
     var warriors = [];
@@ -207,7 +207,7 @@ function ManageSheetVisibility(checkCell, raidType) {
     var hideSheets = rosterSheet.getRange(checkCell).getValue();
     
     var aq40Sheets = ['AQ40'];
-    var naxxSheets = ['Naxx', 'LIP/AOE taunts', 'SporeGrps', '4HM', 'Saph+KT'];
+    var naxxSheets = ['Naxx', 'LIP/AOE taunts', 'SporeGrps', 'Gothik', '4HM', 'Saph+KT'];
     
     if (hideSheets === true) {
         
