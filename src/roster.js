@@ -258,7 +258,7 @@ function ImportNaxxRoster() {
   }
 
   var startColumn = 13;
-  var furyGroupOrder = [2, 4, 5, 3, 6, 7];
+  var furyGroupOrder = [2, 4, 5, 6, 7, 3];
   var furyGroupPriority = {};
   for (var g = 0; g < furyGroupOrder.length; g++) {
     furyGroupPriority[furyGroupOrder[g]] = g;
